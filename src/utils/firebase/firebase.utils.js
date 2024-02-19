@@ -14,7 +14,8 @@ import {
   doc, //takes three args 1.db 2.collection 3.unique identifier
       //that uniqueid we get from c.log google login response
   getDoc,
-  setDoc
+  setDoc,collection,writeBatch,
+  query,getDocs   //for data retrieval
 } from 'firebase/firestore';
 
 const firebaseConfig = {
@@ -39,6 +40,21 @@ const firebaseConfig = {
   export const signInWithGoogleRedirect =()=>
    signInWithRedirect(auth,googleProvider);
   export const db = getFirestore();
+
+  export const addCollectionAndDocuments =async(collectionKey,objectsToAdd)=>{
+    const collectionRef=collection(db,collectionKey);
+    const batch = writeBatch(db);//pass the db on which we have to work batch on
+    
+    objectsToAdd.forEach((object)=>{
+      const docRef =doc(collectionRef,object.title.toLowerCase());
+      batch.set(docRef,object);
+    });
+    await batch.commit();
+    console.log('done');
+  }
+
+
+
 
  export const createUserDocumentFromAuth = async (userAuth,additionalInfo={}) =>{
   if(!userAuth) return;
@@ -75,3 +91,31 @@ export const signOutUser =async()=>await signOut(auth);
 
 export const onAuthStateChangedListner =(callback)=>
 onAuthStateChanged(auth,callback);
+
+export const getCategoriesAndDocuments = async()=>{
+  const collectionRef=collection(db,'categories');
+  const q = query(collectionRef); //gives query mtd
+  const querySnapshot = await getDocs(q); //to fetch doc snapshots
+  const categoryMap = querySnapshot.docs.reduce((acc,docSnapshot)=>{
+    const {title,items}=docSnapshot.data(); 
+    acc[title.toLowerCase()]=items;
+    return acc;
+  },{})
+  return categoryMap;
+}
+
+
+/*
+{
+  hats:{
+    title:'Hats',
+    items:[{},{}]
+  },
+  {
+    sneakers:{
+      title:'Sneakers',
+      items:[{},{}]
+    }
+  },
+}
+*/

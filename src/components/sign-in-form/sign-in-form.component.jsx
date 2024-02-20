@@ -24,7 +24,15 @@ const SignInForm = () => {
   };
 
   const signInWithGoogle = async () => {
-    await signInWithGooglePopup();
+    try{
+      await signInWithGooglePopup();
+    }catch(err){
+      if(err.code ==='auth/unauthorized-domain'){
+        alert('currently unavailable');
+      }else{
+        console.log('an error occured with google popup ',err);
+      }
+    }
   };
 
   const handleSubmit = async (event) => {

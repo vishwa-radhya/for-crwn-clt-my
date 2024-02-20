@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Button from '../button/button.component';
 
 export const SignInContainer = styled.div`
   display: flex;
@@ -14,7 +13,4 @@ export const SignInContainer = styled.div`
 export const ButtonsContainer = styled.div`
   display: flex;
   justify-content: space-between;
-  button:nth-child(2){
-    font-size: 11px;
-  }
 `;

@@ -1,4 +1,5 @@
 import { initializeApp } from 'firebase/app';
+
 import {
   getAuth,
   signInWithRedirect,
@@ -11,6 +12,7 @@ import {
   NextOrObserver,
   User,
 } from 'firebase/auth';
+
 import {
   getFirestore,
   doc,
